@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as nm
+import numpy as np
 df = pd.read_csv("Academic_performance.csv")
 df
 

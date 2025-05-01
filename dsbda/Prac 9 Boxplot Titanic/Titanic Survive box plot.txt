@@ -4,26 +4,30 @@ import matplotlib.pyplot as plt
 
 # Load the dataset
 df = pd.read_csv("Titanic.csv")
-
-# Standardize column names (strip spaces)
 df.columns = df.columns.str.strip()
 
-# Convert 'Age' to a numeric type (handle missing values)
+# Ensure 'Age' and 'Survived' are numeric
 df['Age'] = pd.to_numeric(df['Age'], errors='coerce')
+df['Survived'] = pd.to_numeric(df['Survived'], errors='coerce')
 
-# Drop rows where 'Age' is NaN
-df = df.dropna(subset=['Age'])
+# Drop rows with missing 'Age' or 'Survived'
+df = df.dropna(subset=['Age', 'Survived'])
 
-# Check if required columns exist
+# Check required columns
 if {'Sex', 'Age', 'Survived'}.issubset(df.columns):
     plt.figure(figsize=(10, 6))
-    # Box plot for Age distribution by Sex and Survival
-    sns.boxplot(x='Sex', y='Age', hue='Survived', data=df, palette="Set2")  # Explicit palette
+
+    # Plot with distinct colors
+    ax = sns.boxplot(x='Sex', y='Age', hue='Survived', data=df, palette="Set1")
 
     plt.xlabel("Gender")
     plt.ylabel("Age")
     plt.title("Age Distribution by Gender and Survival Status")
-    plt.legend(title="Survived", labels=["No (0)", "Yes (1)"])
+
+    # Custom legend labels
+    handles, labels = ax.get_legend_handles_labels()
+    plt.legend(handles=handles, labels=["Did Not Survive", "Survived"], title="Survival Status")
+
     plt.show()
 else:
     print("One or more required columns ('Sex', 'Age', 'Survived') are missing in the dataset.")

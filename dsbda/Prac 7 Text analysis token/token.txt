@@ -1,0 +1,61 @@
+ import pandas as pd
+import numpy as np
+from nltk import word_tokenize, sent_tokenize, pos_tag
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+import nltk
+
+nltk.download('punkt_tab')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+
+sentence1 = "I will walk 500 miles and I would walk 500 more. Just to be the man who walks " + \
+            "a thousand miles to fall down at your door!"
+sentence2 = "I played the play playfully as the players were playing in the play with playfullness"
+
+# token
+print('Tokenized words:', word_tokenize(sentence1))
+
+# pos_tagging
+token = word_tokenize(sentence1)
+tagging = pos_tag(token)
+print("Tagging Parts of Speech:", tagging)
+
+# stop word removal
+stop_words = stopwords.words('english')
+
+clean_token = []
+for word in token:
+    if word not in stop_words:
+        clean_token.append(word)
+print(clean_token)
+
+# stemming
+stemmer = PorterStemmer()
+stemmed = [stemmer.stem(word) for word in token]
+print(" ".join(stemmed))
+
+# lemmitization
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word) for word in token]
+print(" ".join(lemmatized))
+
+# 5 TF-IDF Calculation
+corpus = [
+    "Natural language processing (NLP) is a field of artificial intelligence that enables computers to understand, interpret, and generate human language.",
+    "NLP is widely used in applications such as machine translation, sentiment analysis, and chatbots.",
+    "Understanding NLP helps in building systems that can comprehend and interact with humans naturally."
+]
+
+vectorizer = TfidfVectorizer(stop_words='english')
+tfidf_matrix = vectorizer.fit_transform(corpus)
+# Display TF-IDF values
+feature_names = vectorizer.get_feature_names_out()
+tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=feature_names)
+
+print("\nTF-IDF Matrix:")
+print(tfidf_df)

@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+
+# Load the dataset
+df = pd.read_csv("mall.csv")
+
+# Display basic info
+print(df.head())
+print(df.describe())
+
+# Encode the 'Genre' column
+le = LabelEncoder()
+df['Genre'] = le.fit_transform(df['Genre'])  # Male: 1, Female: 0
+
+# Drop 'CustomerID' as it's not useful for analysis
+df.drop('CustomerID', axis=1, inplace=True)
+
+# Basic statistics
+print("Mean:\n", df.mean())
+print("Median:\n", df.median())
+print("Mode:\n", df.mode().iloc[0])
+
+# Grouped statistics by Genre
+print("\nStatistics grouped by Genre (0: Female, 1: Male):")
+print(df.groupby('Genre')['Age'].describe())
+
+# Rename column for convenience
+df.rename(columns={'Annual Income (k$)': 'Income'}, inplace=True)
+
+# Mean values of selected columns
+print("\nMean values of Age, Income, and Spending Score:")
+print(df[['Age', 'Income', 'Spending Score (1-100)']].mean())

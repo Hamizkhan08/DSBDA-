@@ -1,0 +1,41 @@
+# 1. Import all required Python Libraries
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+
+# Load the Dataset into pandas DataFrame
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target
+
+#  Data Preprocessing
+
+# Check for missing values
+print("Missing Values in Each Column:\n", df.isnull().sum())
+
+# Describe the dataset (mean, std, min, max, etc.)
+print("\nData Summary Statistics:\n", df.describe())
+
+# Check shape (dimensions) of the DataFrame
+print("\nShape of Dataset (rows, columns):", df.shape)
+
+# Data Formatting and Normalization
+
+# Check data types of all columns
+print("\nData Types of Each Column:\n", df.dtypes)
+
+# Normalize numeric columns (excluding the categorical column 'species')
+scaler = StandardScaler()
+df[df.columns[:-1]] = scaler.fit_transform(df[df.columns[:-1]])
+
+# Show first 5 rows of normalized data
+print("\nFirst 5 Rows After Normalization:\n", df.head())
+
+#  Turn Categorical Variables into Quantitative Variables
+df['species'] = df['species'].astype('category')
+
+# Convert categorical to numeric codes
+df['species'] = df['species'].cat.codes
+
+# Show first 5 rows after encoding
+print("\nFirst 5 Rows After Encoding 'species' Column:\n", df.head())

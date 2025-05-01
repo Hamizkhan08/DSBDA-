@@ -1,0 +1,22 @@
+mkdir spark-scala-app 
+cd spark-scala-app 
+mkdir -p src/main/scala 
+touch build.sbt 
+touch src/main/scala/WordCount.scala
+
+spark-shell 
+
+val text = sc.parallelize(Seq("spark is fast", "scala is powerful", "spark scala together"))
+
+val words = text.flatMap(_.split("\\s+"))
+val wordPairs = words.map(word => (word, 1))
+val wordCounts = wordPairs.reduceByKey(_ + _)
+wordCounts.collect().foreach(println)
+
+output:
+(scala,2) 
+(together,1) 
+(powerful,1) 
+(is,2) 
+(fast,1) 
+(spark,2)

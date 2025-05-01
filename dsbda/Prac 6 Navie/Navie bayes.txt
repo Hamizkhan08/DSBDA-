@@ -9,6 +9,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 # Load the data
 df = pd.read_csv('iris.csv')
+df.fillna(df.mean(numeric_only=True), inplace=True)# to remove null value
 
 # Prepare the dataset
 X = df.iloc[:, :4].values  # Features
